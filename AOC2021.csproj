@@ -7,8 +7,11 @@
 
   <ItemGroup>
     <Compile Remove="AOC2021.Tests\**" />
+    <Compile Remove="packages\**" />
     <EmbeddedResource Remove="AOC2021.Tests\**" />
+    <EmbeddedResource Remove="packages\**" />
     <None Remove="AOC2021.Tests\**" />
+    <None Remove="packages\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +32,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="InputFiles\day5.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="InputFiles\day6.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
