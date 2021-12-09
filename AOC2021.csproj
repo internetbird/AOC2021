@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AOC2021.Tests\**" />
+    <EmbeddedResource Remove="AOC2021.Tests\**" />
+    <None Remove="AOC2021.Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="InputFiles\" />
   </ItemGroup>
 
@@ -20,6 +26,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="InputFiles\day4.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="InputFiles\day5.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
