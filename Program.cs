@@ -7,7 +7,7 @@ namespace AOC2021
     {
         static void Main(string[] args)
         {
-            IPuzzleSolver solver = new Day7PuzzleSolver();
+            IPuzzleSolver solver = new Day8PuzzleSolver();
 
             var solution = solver.SolvePuzzlePart2();
             Console.WriteLine($"The solution to the puzzle is: {solution}");
