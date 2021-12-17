@@ -11,7 +11,16 @@ namespace AOC2021.PuzzleSolvers
     {
         public string SolvePuzzlePart1()
         {
-            string[] inputLines = InputFilesHelper.GetInputFileLines("day9.txt");
+            int[,] map = GetInputMap();
+
+            Dictionary<Point, int> lowPointsDict = FindAllLowPoints(map);
+
+            return lowPointsDict.Sum(kvp => kvp.Value + 1).ToString();
+        }
+
+        private static int[,] GetInputMap(string inputFileName = "day9.txt")
+        {
+            string[] inputLines = InputFilesHelper.GetInputFileLines(inputFileName);
 
             int numOfColumns = inputLines[0].Length;
             int numOfRows = inputLines.Length;
@@ -26,14 +35,13 @@ namespace AOC2021.PuzzleSolvers
                 }
             }
 
-            List<int> lowPoints = FindAllLowPoints(map);
-
-            return lowPoints.Sum(point => point + 1).ToString();
+            return map;
         }
 
-        private List<int> FindAllLowPoints(int[,] map)
+        private Dictionary<Point, int> FindAllLowPoints(int[,] map)
         {
-            var lowPoints = new List<int>();
+
+            var lowPointsDict = new Dictionary<Point, int>();
 
             int numOfRows = map.GetLength(0);
             int numOfColumns = map.GetLength(1);
@@ -42,59 +50,118 @@ namespace AOC2021.PuzzleSolvers
             {
                 for (int j = 0; j < numOfColumns; j++)
                 {
-                    List<int> neighbours = GetAllNeighbours(i, j, map);
+                    Dictionary<Point, int> neighboursDict = GetAllNeighbours(i, j, map);
 
                     int currVal = map[i, j];
 
-                    if (neighbours.All(neighbour => neighbour > currVal))
+                    if (neighboursDict.All(kvp => kvp.Value > currVal))
                     {
-                        lowPoints.Add(currVal);
+                        lowPointsDict.Add(new Point(i, j), currVal);
                     }
                 }
             }
 
-            return lowPoints;
+            return lowPointsDict;
         }
 
-        private List<int> GetAllNeighbours(int i, int j, int[,] map)
+        private Dictionary<Point, int> GetAllNeighbours(int x, int y, int[,] map)
         {
+
+            var allNeighbours = new Dictionary<Point, int>();
+
             int numOfRows = map.GetLength(0);
             int numOfColumns = map.GetLength(1);
 
-            var neighbours = new List<int>();
-
-            List<Point> neighbourPoints = GetNeighbourCoordinates(i, j);
+            List<Point> neighbourPoints = GetNeighbourCoordinates(x, y);
 
             foreach (Point point in neighbourPoints)
             {
-                if (point.X >= 0 && point.X < numOfColumns && point.Y >= 0 && point.Y < numOfRows)
+                if (point.X >= 0 && point.X < numOfRows && point.Y >= 0 && point.Y < numOfColumns)
                 {
-                    neighbours.Add(map[point.X, point.Y]);
+                    allNeighbours.Add(point, map[point.X, point.Y]);
                 }
             }
 
-            return neighbours;
+            return allNeighbours;
         }
 
-        private List<Point> GetNeighbourCoordinates(int i, int j)
+
+        
+        private List<Point> GetNeighbourCoordinates(int x, int y)
         {
             var neighbourPoints = new List<Point>();
 
-            neighbourPoints.Add(new Point(i, j + 1));
-            neighbourPoints.Add(new Point(i, j - 1));
-            neighbourPoints.Add((new Point(i+ 1, j + 1)));
-            neighbourPoints.Add((new Point(i + 1, j - 1)));
-            neighbourPoints.Add((new Point(i + 1, j)));
-            neighbourPoints.Add(((new Point(i - 1, j))));
-            neighbourPoints.Add(((new Point(i - 1, j + 1))));
-            neighbourPoints.Add(((new Point(i - 1, j - 1))));
+            neighbourPoints.Add(new Point(x, y + 1));
+            neighbourPoints.Add(new Point(x, y - 1));
+            neighbourPoints.Add((new Point(x + 1, y)));
+            neighbourPoints.Add(((new Point(x - 1, y))));
 
             return neighbourPoints;
         }
 
         public string SolvePuzzlePart2()
         {
-            throw new NotImplementedException();
+
+            int[,] map = GetInputMap("day9.txt");
+            var basinSizes = new List<int>();
+            Dictionary<Point, int> lowPointsDict = FindAllLowPoints(map);
+
+            foreach (KeyValuePair<Point, int> kvp in lowPointsDict)
+            {
+                int basinSize = GetBasinSizeForLowPoint(kvp.Key, map);
+                basinSizes.Add(basinSize);
+            }
+
+            basinSizes = basinSizes.OrderByDescending(s => s).ToList();
+
+            return (basinSizes[0] * basinSizes[1] * basinSizes[2]).ToString();
+        }
+
+        private int GetBasinSizeForLowPoint(Point lowPoint, int[,] map)
+        {
+            List<Point> basin = new List<Point> { lowPoint };
+
+            Dictionary<Point, int> lowPointsDict = GetAllNeighbours(lowPoint.X, lowPoint.Y, map);
+            List<Point> pointsToScan = new List<Point>();
+
+            foreach (KeyValuePair<Point, int> kvp in lowPointsDict)
+            {
+                if (kvp.Value != 9)
+                {
+                    basin.Add(kvp.Key);
+                    pointsToScan.Add(kvp.Key);
+                }
+            }
+
+            while (pointsToScan.Any())
+            {
+                var scannedPoints = new List<Point>();
+                var newPointsToScan = new List<Point>();
+
+                foreach (Point point in pointsToScan)
+                {
+                    Dictionary<Point, int> neighbours = GetAllNeighbours(point.X, point.Y, map);
+
+                    foreach (KeyValuePair<Point, int> kvp in neighbours)
+                    {
+                        if ((map[point.X, point.Y] < kvp.Value)
+                            && (kvp.Value != 9)
+                            && !basin.Contains(kvp.Key))
+                        {
+                            basin.Add(kvp.Key);
+                            newPointsToScan.Add(kvp.Key);
+
+                        }
+                    }
+
+                    scannedPoints.Add(point);
+                }
+
+                pointsToScan.RemoveAll(point => scannedPoints.Contains(point));
+                pointsToScan.AddRange(newPointsToScan);
+            }
+
+            return basin.Count;
         }
     }
 }
