@@ -1,5 +1,5 @@
-﻿using AOC2021.Models;
-using AOC2021.Utility;
+﻿using AOC;
+using AOC2021.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

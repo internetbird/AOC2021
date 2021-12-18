@@ -1,4 +1,5 @@
-﻿using AOC2021.Utility;
+﻿using AOC;
+using BirdLib;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -22,20 +23,9 @@ namespace AOC2021.PuzzleSolvers
         {
             string[] inputLines = InputFilesHelper.GetInputFileLines(inputFileName);
 
-            int numOfColumns = inputLines[0].Length;
-            int numOfRows = inputLines.Length;
+            var owl = new MatrixOwl();
 
-            int[,] map = new int[numOfRows, numOfColumns];
-
-            for (int i = 0; i < numOfRows; i++)
-            {
-                for (int j = 0; j < numOfColumns; j++)
-                {
-                    map[i, j] = int.Parse(inputLines[i][j].ToString());
-                }
-            }
-
-            return map;
+            return owl.ParseIntMatrix(inputLines);
         }
 
         private Dictionary<Point, int> FindAllLowPoints(int[,] map)

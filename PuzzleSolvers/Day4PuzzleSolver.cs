@@ -1,6 +1,6 @@
-﻿using AOC2021.Models;
+﻿using AOC;
+using AOC2021.Models;
 using AOC2021.Parsers;
-using AOC2021.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;

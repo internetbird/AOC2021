@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Github\BirdLib\BirdLib\BirdLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="InputFiles\day1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -22,6 +26,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="InputFiles\day10.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="InputFiles\day11.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="InputFiles\day2.txt">
